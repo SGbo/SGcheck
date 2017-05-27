@@ -6,12 +6,12 @@ Record measurement series with EMU Check
 ## Measurement Series
 
 GET /sgcheck/measurementseries/
-GET /sgcheck/measurementseries/1
+GET /sgcheck/measurementseries/{id}
 
 POST /sgcheck/measurementseries/
 
 ## Measurement Points
 
-GET /sgcheck/measurementseries/1/points
+GET /sgcheck/measurementseries/{id}/points
 
-POST /sgcheck/measurementseries/1/points
+POST /sgcheck/measurementseries/{id}/points
