@@ -1,4 +1,4 @@
-package gui;
+package de.grueter.sgcheck.client.gui;
 
 import java.net.URL;
 import java.util.Collection;

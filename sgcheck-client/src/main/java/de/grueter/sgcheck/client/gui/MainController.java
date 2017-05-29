@@ -1,13 +1,12 @@
-package gui;
+package de.grueter.sgcheck.client.gui;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
-import business.SqlModel;
+import de.grueter.sgcheck.client.model.MeasurementSeriesModel;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,8 +27,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainController implements Initializable {
-	private DBModel sqlModel;
-
 	@FXML
 	private TextField messreiheIdEdit;
 	@FXML
@@ -61,14 +58,7 @@ public class MainController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		sqlModel = DBModel.getInstance();
-
-		try {
-			sqlModel.updateMeasurementSeriesList();
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		MeasurementSeriesModel.getInstance().updateMeasurementSeriesList();
 
 		// init columns of table
 		messreiheIdColumn.setCellValueFactory(new PropertyValueFactory<MeasurementSeries, Integer>("id"));
@@ -81,18 +71,18 @@ public class MainController implements Initializable {
 				.setCellValueFactory(new PropertyValueFactory<MeasurementSeries, String>("messgroesse"));
 
 		// set data to table
-		measurementSeriesTable.setItems(sqlModel.getMeasurementSeriesList());
+		measurementSeriesTable.setItems(MeasurementSeriesModel.getInstance().getMeasurementSeriesList());
 		measurementSeriesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		// add context-menu to table
 		final MenuItem showLineChartitem = new MenuItem("Zeige Liniendiagramm");
 		showLineChartitem.setOnAction(ae -> {
-			showChart("LineChartView.fxml");
+			showChart("LineChartView.fxml", "Liniendiagramm");
 		});
 
 		final MenuItem showBarChartItem = new MenuItem("Zeige Balkendiagramm");
 		showBarChartItem.setOnAction(ae -> {
-			showChart("BarChartView.fxml");
+			showChart("BarChartView.fxml", "Balkendiagramm");
 		});
 
 		final ContextMenu contextMenu = new ContextMenu();
@@ -101,12 +91,12 @@ public class MainController implements Initializable {
 		measurementSeriesTable.setContextMenu(contextMenu);
 	}
 
-	private void showChart(String res) {
+	private void showChart(String res, String title) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(res));
 
 		try {
 			Stage stage = new Stage();
-			stage.setTitle("Liniendiagramm");
+			stage.setTitle(title);
 			stage.setScene(new Scene((AnchorPane) loader.load()));
 
 			ChartController lineChartController = loader.getController();
@@ -117,22 +107,18 @@ public class MainController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
-	private Collection<XYChart.Series<String, Number>> createSeriesCollectionOfSelection() {
-		Collection<XYChart.Series<String, Number>> chartSeriesCollection = new ArrayList< Series<String, Number> >();
 
-		try {
-			ObservableList<MeasurementSeries> measurementSeriesList = measurementSeriesTable.getSelectionModel()
-					.getSelectedItems();
-			for (MeasurementSeries series : measurementSeriesList) {
-				Series<String, Number> chartSeries = sqlModel.getMeasurementSeriesData(series.getId());
-				chartSeries.setName(series.getVerbraucher() + "(id: " + series.getId() + ")");
-				chartSeriesCollection.add(chartSeries);
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
+	private Collection<XYChart.Series<String, Number>> createSeriesCollectionOfSelection() {
+		Collection<XYChart.Series<String, Number>> chartSeriesCollection = new ArrayList<Series<String, Number>>();
+
+		ObservableList<MeasurementSeries> measurementSeriesList = measurementSeriesTable.getSelectionModel()
+				.getSelectedItems();
+		
+		for (MeasurementSeries series : measurementSeriesList) {
+			Series<String, Number> chartSeries = MeasurementSeriesModel.getInstance()
+					.getMeasurementPointList(series.getId());
+			chartSeries.setName(series.getVerbraucher() + "(id: " + series.getId() + ")");
+			chartSeriesCollection.add(chartSeries);
 		}
 
 		return chartSeriesCollection;
@@ -140,13 +126,8 @@ public class MainController implements Initializable {
 
 	@FXML
 	void updateMessreiheList() {
-		try {
-			sqlModel.updateMeasurementSeriesList();
-			// System.out.println(basisModel.holeMessreihe(1));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		MeasurementSeriesModel.getInstance().updateMeasurementSeriesList();
+		// System.out.println(basisModel.holeMessreihe(1));
 	}
 
 	@FXML
@@ -158,6 +139,7 @@ public class MainController implements Initializable {
 			Stage stage = new Stage();
 			stage.setTitle("Neue Messreihe");
 			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.setResizable(false);
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {

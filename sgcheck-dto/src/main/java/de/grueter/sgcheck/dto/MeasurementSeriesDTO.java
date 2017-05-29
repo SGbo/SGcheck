@@ -8,7 +8,7 @@ public class MeasurementSeriesDTO {
 	private Date stop;
 	private int interval;
 	private String consumer;
-	private String unit;
+	private MeasurandDTO measurand;
 	
 	public int getId() {
 		return id;
@@ -40,10 +40,10 @@ public class MeasurementSeriesDTO {
 	public void setConsumer(String consumer) {
 		this.consumer = consumer;
 	}
-	public String getUnit() {
-		return unit;
+	public MeasurandDTO getMeasurand() {
+		return measurand;
 	}
-	public void setUnit(String unit) {
-		this.unit = unit;
+	public void setMeasurand(MeasurandDTO measurand) {
+		this.measurand = measurand;
 	}
 }

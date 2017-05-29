@@ -1,4 +1,4 @@
-package rest;
+package de.grueter.sgcheck.server.rest;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import de.grueter.sgcheck.dto.MeasurementPointDTO;
 import de.grueter.sgcheck.dto.MeasurementSeriesDTO;
-import model.DBModel;
+import de.grueter.sgcheck.server.model.DBModel;
 
 @Path("/measurementseries")
 public class MeasurementSeriesService {	
@@ -24,7 +24,6 @@ public class MeasurementSeriesService {
 		try {
 			return DBModel.getInstance().getMeasurementSeriesList();
 		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -49,11 +48,11 @@ public class MeasurementSeriesService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void addMeasurementSeries(MeasurementSeriesDTO series) {
+		System.out.println("ADD MEASUREMENT SERIES");
 		System.out.println(series.getConsumer());
 		try {
 			DBModel.getInstance().addMeasurementSeries(series);
 		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

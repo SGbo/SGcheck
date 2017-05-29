@@ -1,9 +1,13 @@
 package de.grueter.sgcheck.dto;
 
 public class MeasurandDTO {
-	private final int id;
-	private final String name;
-	private final String unit;
+	private int id;
+	private String name;
+	private String unit;
+	
+	public MeasurandDTO() {
+		
+	}
 	
 	public MeasurandDTO(int id, String name, String unit) {
 		this.id = id;

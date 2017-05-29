@@ -1,4 +1,4 @@
-package gui;
+package de.grueter.sgcheck.client.gui;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

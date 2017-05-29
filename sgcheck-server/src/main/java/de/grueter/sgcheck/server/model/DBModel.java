@@ -1,4 +1,4 @@
-package model;
+package de.grueter.sgcheck.server.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

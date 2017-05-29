@@ -1,4 +1,4 @@
-package gui;
+package de.grueter.sgcheck.client.gui;
 
 	
 import javafx.application.Application;
