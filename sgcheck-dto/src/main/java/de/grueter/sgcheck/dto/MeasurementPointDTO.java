@@ -4,12 +4,17 @@ import java.util.Date;
 
 public class MeasurementPointDTO {
 	private int id;
-	private int measurementSeriesId;
 	private Date timestemp;
 	private double value;
 	
 	public MeasurementPointDTO() {
 		
+	}
+	
+	public MeasurementPointDTO(int id, Date timeStemp, double value) {
+		this.id = id;
+		this.timestemp = timeStemp;
+		this.value = value;
 	}
 
 	public int getId() {
@@ -18,14 +23,6 @@ public class MeasurementPointDTO {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getMeasurementSeriesId() {
-		return measurementSeriesId;
-	}
-
-	public void setMeasurementSeriesId(int measurementSeriesId) {
-		this.measurementSeriesId = measurementSeriesId;
 	}
 
 	public Date getTimestemp() {

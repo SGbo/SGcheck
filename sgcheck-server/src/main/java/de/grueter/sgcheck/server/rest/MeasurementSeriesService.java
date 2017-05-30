@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import de.grueter.sgcheck.dto.MeasurementPointDTO;
 import de.grueter.sgcheck.dto.MeasurementSeriesDTO;
-import de.grueter.sgcheck.server.model.DBModel;
+import de.grueter.sgcheck.server.rest.db.DBActions;
 
 @Path("/measurementseries")
 public class MeasurementSeriesService {	
@@ -22,7 +22,7 @@ public class MeasurementSeriesService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<MeasurementSeriesDTO> getMeasurementSeries() {
 		try {
-			return DBModel.getInstance().getMeasurementSeriesList();
+			return DBActions.getInstance().getMeasurementSeriesList();
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -35,7 +35,7 @@ public class MeasurementSeriesService {
 	@Produces(MediaType.APPLICATION_JSON) 
 	public MeasurementSeriesDTO getMeasurementSeries(@PathParam("id") int id) {
 		try {
-			return DBModel.getInstance().getMeasurementSeries(id);
+			return DBActions.getInstance().getMeasurementSeries(id);
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,7 +51,7 @@ public class MeasurementSeriesService {
 		System.out.println("ADD MEASUREMENT SERIES");
 		System.out.println(series.getConsumer());
 		try {
-			DBModel.getInstance().addMeasurementSeries(series);
+			DBActions.getInstance().addMeasurementSeries(series);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -62,7 +62,7 @@ public class MeasurementSeriesService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<MeasurementPointDTO> getMeasurementPoints(@PathParam("measurementSeriesId") int measurementSeriesId) {
 		try {
-			return DBModel.getInstance().getMeasurementPointList(measurementSeriesId);
+			return DBActions.getInstance().getMeasurementPointList(measurementSeriesId);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -74,9 +74,9 @@ public class MeasurementSeriesService {
 	@Path("/{measurementSeriesId}/points")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void addMeasurementPoint(@PathParam("measurementSeriesId") int measurementSeriesId, MeasurementPointDTO point) {
-		System.out.println(point.getId() + " " + point.getMeasurementSeriesId() + " " + point.getTimestemp() + " " + point.getValue());
+		System.out.println(point.getId() + " " + point.getTimestemp() + " " + point.getValue());
 		try {
-			DBModel.getInstance().addMeasurementPoint(measurementSeriesId, point);
+			DBActions.getInstance().addMeasurementPoint(measurementSeriesId, point);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

@@ -108,7 +108,7 @@ public final class MeasurementSeriesModel {
 		Logger logger = Logger.getLogger(getClass().getName());
 
 		Feature feature = new LoggingFeature(logger, Level.INFO, null, null);
-		
+
 		Client client = ClientBuilder.newClient();
 		client.register(feature);
 
@@ -118,11 +118,22 @@ public final class MeasurementSeriesModel {
 		seriesDTO.setMeasurand(new MeasurandDTO(measurand.getId(), measurand.getName(), measurand.getUnit()));
 
 		WebTarget webTarget = client.target(baseUri);
-		Response response = webTarget.request(MediaType.APPLICATION_JSON)
-				.post(Entity.json(seriesDTO));
-		
-		System.out.println(Entity.json(seriesDTO));
 
-		System.out.println("Response code: " + response.getStatus());
+		@SuppressWarnings("unused")
+		Response response = webTarget.request(MediaType.APPLICATION_JSON).post(Entity.json(seriesDTO));
+	}
+
+	public void saveMeasurementPoint(int measurementSeriesId, MeasurementPointDTO measurementPoint) {
+		Logger logger = Logger.getLogger(getClass().getName());
+
+		Feature feature = new LoggingFeature(logger, Level.INFO, null, null);
+
+		Client client = ClientBuilder.newClient();
+		client.register(feature);
+
+		WebTarget webTarget = client.target(baseUri + "/" + measurementSeriesId + "/points");
+
+		@SuppressWarnings("unused")
+		Response response = webTarget.request(MediaType.APPLICATION_JSON).post(Entity.json(measurementPoint));
 	}
 }

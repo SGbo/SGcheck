@@ -34,8 +34,8 @@
             <ButtonBar layoutX="305.0" layoutY="546.0" prefHeight="40.0" prefWidth="478.0">
               <buttons>
                   <Button mnemonicParsing="false" onAction="#showNewMeasurementSeriesView" text="Neue Messreihe" />
-                  <Button mnemonicParsing="false" text="Messreihe starten" />
-                  <Button mnemonicParsing="false" text="Messreihe stoppen" />
+                  <Button mnemonicParsing="false" onAction="#startMeasurement" text="Messreihe starten" />
+                  <Button mnemonicParsing="false" onAction="#stopMeasurement" text="Messreihe stoppen" />
               </buttons>
             </ButtonBar>
          </children>

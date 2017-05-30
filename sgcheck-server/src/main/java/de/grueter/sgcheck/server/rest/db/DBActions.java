@@ -1,4 +1,4 @@
-package de.grueter.sgcheck.server.model;
+package de.grueter.sgcheck.server.rest.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,34 +12,33 @@ import java.util.List;
 import de.grueter.sgcheck.dto.MeasurementPointDTO;
 import de.grueter.sgcheck.dto.MeasurementSeriesDTO;
 
-public final class DBModel {
-	private static DBModel instance; // pointer to singleton-instance
+public final class DBActions {
+	private static DBActions instance; // pointer to singleton-instance
 	private Connection connection; // sql connection
 
 	// create instance (singleton)
-	public static DBModel getInstance() {
+	public static DBActions getInstance() {
 		if (instance == null) {
-			instance = new DBModel();
+			instance = new DBActions();
 		}
 
 		return instance;
 	}
 
 	// hidden constructor
-	private DBModel() {
+	private DBActions() {
 	}
 
 	// open connection to sql server
 	void connectSql() throws SQLException, ClassNotFoundException {
 		Class.forName("com.mysql.jdbc.Driver");
 
-		connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Grueter", "phpmyadmin", "some_password");
+		// connection =
+		// DriverManager.getConnection("jdbc:mysql://localhost:3306/Grueter",
+		// "phpmyadmin", "some_password");
 
 		// connect to lab
-		// connection =
-		// DriverManager.getConnection("jdbc:mysql://stud-server2008:3306/grueter",
-		// "Grueter",
-		// "123456789");
+		connection = DriverManager.getConnection("jdbc:mysql://stud-server2008:3306/grueter", "Grueter", "123456789");
 	}
 
 	public List<MeasurementSeriesDTO> getMeasurementSeriesList() throws ClassNotFoundException, SQLException {
@@ -103,7 +102,6 @@ public final class DBModel {
 		while (resultSet.next()) {
 			MeasurementPointDTO point = new MeasurementPointDTO();
 			point.setId(resultSet.getInt("id"));
-			point.setMeasurementSeriesId(resultSet.getInt("messreihe_id"));
 			point.setTimestemp(new Date(resultSet.getTimestamp("zeit").getTime()));
 			point.setValue(resultSet.getDouble("messwert"));
 
@@ -120,7 +118,7 @@ public final class DBModel {
 
 		Statement statement = connection.createStatement();
 		statement.executeUpdate("INSERT INTO `messung` (`id`, `messreihe_id`, `zeit`, `messwert`) VALUES ('"
-				+ point.getId() + "','" + point.getMeasurementSeriesId() + "','"
+				+ point.getId() + "','" + measurementSeriesId + "','"
 				+ new java.sql.Date(point.getTimestemp().getTime()) + "','" + point.getValue() + "')");
 	}
 }
