@@ -27,7 +27,7 @@ import javafx.scene.chart.XYChart.Series;
 
 public final class MeasurementSeriesModel {
 	private static MeasurementSeriesModel instance;
-	private final String baseUri = "http://localhost:8080/sgcheck/measurementseries";
+	private final String BASE_URI = "http://localhost:8080/sgcheck/measurementseries";
 	private final ObservableList<MeasurementSeries> measurementSeriesList = FXCollections.observableArrayList();
 
 	// create instance (singleton)
@@ -50,10 +50,8 @@ public final class MeasurementSeriesModel {
 	public void updateMeasurementSeriesList() {
 		Client client = ClientBuilder.newClient();
 
-		WebTarget webTarget = client.target(baseUri);
+		WebTarget webTarget = client.target(BASE_URI);
 		Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
-
-		System.out.println(response.getStatus());
 
 		if (response.getStatus() == 200) {
 			List<MeasurementSeriesDTO> seriesList = response.readEntity(new GenericType<List<MeasurementSeriesDTO>>() {
@@ -87,7 +85,7 @@ public final class MeasurementSeriesModel {
 	public Series<String, Number> getMeasurementPointList(int measureSeriesId) {
 		Client client = ClientBuilder.newClient();
 
-		WebTarget webTarget = client.target(baseUri + "/" + measureSeriesId + "/points");
+		WebTarget webTarget = client.target(BASE_URI + "/" + measureSeriesId + "/points");
 		Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 
 		System.out.println(response.getStatus());
@@ -102,9 +100,8 @@ public final class MeasurementSeriesModel {
 
 		return series;
 	}
-
-	public void createMeasurementSeries(String consumer, Measurand measurand, int interval) {
-
+	
+	public int createMeasurementSeries(String consumer, Measurand measurand, int interval) throws Exception {
 		Logger logger = Logger.getLogger(getClass().getName());
 
 		Feature feature = new LoggingFeature(logger, Level.INFO, null, null);
@@ -117,10 +114,28 @@ public final class MeasurementSeriesModel {
 		seriesDTO.setInterval(interval);
 		seriesDTO.setMeasurand(new MeasurandDTO(measurand.getId(), measurand.getName(), measurand.getUnit()));
 
-		WebTarget webTarget = client.target(baseUri);
+		WebTarget webTarget = client.target(BASE_URI);
 
-		@SuppressWarnings("unused")
 		Response response = webTarget.request(MediaType.APPLICATION_JSON).post(Entity.json(seriesDTO));
+		
+		MeasurementSeriesDTO responseDTO = response.readEntity(new GenericType<MeasurementSeriesDTO>() {});
+		if (responseDTO != null) {
+			return responseDTO.getId();
+		}
+		
+		return -1;
+	}
+	
+	public void removeMeasurementSeries(int id) {
+		Logger logger = Logger.getLogger(getClass().getName());
+
+		Feature feature = new LoggingFeature(logger, Level.INFO, null, null);
+
+		Client client = ClientBuilder.newClient();
+		client.register(feature);
+		
+		WebTarget webTarget = client.target(BASE_URI + "/" + id);
+		webTarget.request().delete();
 	}
 
 	public void saveMeasurementPoint(int measurementSeriesId, MeasurementPointDTO measurementPoint) {
@@ -131,7 +146,7 @@ public final class MeasurementSeriesModel {
 		Client client = ClientBuilder.newClient();
 		client.register(feature);
 
-		WebTarget webTarget = client.target(baseUri + "/" + measurementSeriesId + "/points");
+		WebTarget webTarget = client.target(BASE_URI + "/" + measurementSeriesId + "/points");
 
 		@SuppressWarnings("unused")
 		Response response = webTarget.request(MediaType.APPLICATION_JSON).post(Entity.json(measurementPoint));

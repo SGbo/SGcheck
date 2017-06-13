@@ -8,7 +8,7 @@ public class Measurand {
 	private final SimpleStringProperty name = new SimpleStringProperty();
 	private final SimpleStringProperty unit = new SimpleStringProperty();
 	
-	Measurand(int id, String name, String unit) {
+	public Measurand(int id, String name, String unit) {
 		this.id.set(id);
 		this.name.set(name);
 		this.unit.set(unit);

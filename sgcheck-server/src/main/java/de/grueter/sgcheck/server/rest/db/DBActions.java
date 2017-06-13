@@ -72,20 +72,47 @@ public final class DBActions {
 			series.setId(resultSet.getInt("id"));
 			series.setConsumer(resultSet.getString("verbraucher"));
 			series.setInterval(resultSet.getInt("interval"));
-
-			return series;
+			series.setStart(getMinMeasurementSeriesDate(series.getId()));
 		}
 
 		return null;
 	}
 
-	public void addMeasurementSeries(MeasurementSeriesDTO series) throws SQLException, ClassNotFoundException {
+	public Date getMinMeasurementSeriesDate(int messreihe_id) throws ClassNotFoundException, SQLException {
+		connectSql();
+
+		Statement statement = connection.createStatement();
+		ResultSet resultSet = statement
+				.executeQuery("SELECT MIN(zeit) AS minZeit FROM messung WHERE messreihe_id=" + messreihe_id);
+
+		if (resultSet.next()) {
+			return resultSet.getDate("minZeit");
+		}
+
+		return null;
+	}
+
+	public int addMeasurementSeries(MeasurementSeriesDTO series) throws SQLException, ClassNotFoundException {
 		connectSql();
 
 		Statement statement = connection.createStatement();
 		String sql = "INSERT INTO " + "`messreihe` (`id`, `verbraucher`, `messgroesse_id`, `interval`) VALUES (NULL, '"
-				+ series.getConsumer() + "','" + series.getId() + "','" + series.getInterval() + "');";
+				+ series.getConsumer() + "','" + series.getId() + "','" + series.getInterval() + "'); ";
 
+		statement.executeUpdate(sql);
+				ResultSet resultSet = statement.executeQuery(sql);
+		
+		return resultSet.getInt(0);
+	}
+
+	public void removeMeasurementSeries(int messreihe_id) throws ClassNotFoundException, SQLException {
+		connectSql();
+
+		Statement statement = connection.createStatement();
+		String sql = "DELETE FROM " + "`messreihe` WHERE id=" + messreihe_id;
+		statement.executeUpdate(sql);
+
+		sql = "DELETE FROM " + "`messung` WHERE messreihe_id=" + messreihe_id;
 		statement.executeUpdate(sql);
 	}
 

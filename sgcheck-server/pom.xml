@@ -47,7 +47,7 @@
 
 	<build>
 		<finalName>sgcheck</finalName>
-				<plugins>
+		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>

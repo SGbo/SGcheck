@@ -41,14 +41,18 @@ public class NewMeasurementSeriesController implements Initializable {
 			return;
 		}
 		
-		MeasurementSeriesModel.getInstance().createMeasurementSeries(consumerEdit.getText(), measurandCombo.getValue(), Integer.parseInt(intervalEdit.getText()));
+		try {
+			MeasurementSeriesModel.getInstance().createMeasurementSeries(consumerEdit.getText(), measurandCombo.getValue(), Integer.parseInt(intervalEdit.getText()));
+		
+			// update view
+			MeasurementSeriesModel.getInstance().updateMeasurementSeriesList();
 
-		// // update view
-		MeasurementSeriesModel.getInstance().updateMeasurementSeriesList();
-
-		// close
-		Stage stage = (Stage) saveButton.getScene().getWindow();
-		stage.close();
+			// close
+			Stage stage = (Stage) saveButton.getScene().getWindow();
+			stage.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@FXML

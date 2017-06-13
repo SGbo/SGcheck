@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 
 public class MainController implements Initializable {
 	EmuCheckMessreihe eccm;
-	
+
 	@FXML
 	private TextField messreiheIdEdit;
 	@FXML
@@ -114,12 +114,23 @@ public class MainController implements Initializable {
 		}
 	}
 
+	@FXML
+	private void deleteMeasurementSeries() {
+		if (!measurementSeriesTable.getSelectionModel().isEmpty()) {
+			MeasurementSeriesModel.getInstance()
+					.removeMeasurementSeries(measurementSeriesTable.getSelectionModel().getSelectedItem().getId());
+
+			// update view
+			MeasurementSeriesModel.getInstance().updateMeasurementSeriesList();
+		}
+	}
+
 	private Collection<XYChart.Series<String, Number>> createSeriesCollectionOfSelection() {
 		Collection<XYChart.Series<String, Number>> chartSeriesCollection = new ArrayList<Series<String, Number>>();
 
 		ObservableList<MeasurementSeries> measurementSeriesList = measurementSeriesTable.getSelectionModel()
 				.getSelectedItems();
-		
+
 		for (MeasurementSeries series : measurementSeriesList) {
 			Series<String, Number> chartSeries = MeasurementSeriesModel.getInstance()
 					.getMeasurementPointList(series.getId());
@@ -147,7 +158,7 @@ public class MainController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@FXML
 	public void startMeasurement() {
 		try {
@@ -167,7 +178,7 @@ public class MainController implements Initializable {
 			eccm.interrupt();
 		}
 	}
-	
+
 	public void saveMeasurement(int measurementSeriesId, MeasurementPointDTO measurementPoint) {
 		MeasurementSeriesModel.getInstance().saveMeasurementPoint(measurementSeriesId, measurementPoint);
 	}
