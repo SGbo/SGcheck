@@ -113,7 +113,7 @@ public class MainController implements Initializable {
 
 		ObservableList<MeasurementSeries> measurementSeriesList = measurementSeriesTable.getSelectionModel()
 				.getSelectedItems();
-		
+
 		for (MeasurementSeries series : measurementSeriesList) {
 			Series<String, Number> chartSeries = MeasurementSeriesModel.getInstance()
 					.getMeasurementPointList(series.getId());
@@ -133,8 +133,7 @@ public class MainController implements Initializable {
 	@FXML
 	void showNewMeasurementSeriesView() {
 		try {
-			GridPane rootPane;
-			rootPane = FXMLLoader.load(getClass().getResource("NewMeasurementSeriesView.fxml"));
+			GridPane rootPane = FXMLLoader.load(getClass().getResource("NewMeasurementSeriesView.fxml"));
 			Scene scene = new Scene(rootPane);
 			Stage stage = new Stage();
 			stage.setTitle("Neue Messreihe");

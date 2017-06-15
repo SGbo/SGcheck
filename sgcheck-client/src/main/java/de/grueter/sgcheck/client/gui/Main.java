@@ -1,6 +1,5 @@
 package de.grueter.sgcheck.client.gui;
 
-	
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +12,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			BorderPane rootPane = FXMLLoader.load(getClass().getResource("MainView.fxml"));
-			
+
 			Scene scene = new Scene(rootPane, 800, 600);
 			primaryStage.setTitle("EMU Check - Verwaltung von Messreihen");
 			primaryStage.setScene(scene);
@@ -22,11 +21,11 @@ public class Main extends Application {
 				System.exit(0);
 			});
 			primaryStage.show();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
