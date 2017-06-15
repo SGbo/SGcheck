@@ -33,9 +33,10 @@
             </TableView>
             <ButtonBar layoutX="305.0" layoutY="546.0" prefHeight="40.0" prefWidth="478.0">
               <buttons>
-                  <Button mnemonicParsing="false" onAction="#showNewMeasurementSeriesView" text="Neue Messreihe" />
-                  <Button mnemonicParsing="false" text="Messreihe starten" />
-                  <Button mnemonicParsing="false" text="Messreihe stoppen" />
+                  <Button mnemonicParsing="false" onAction="#showNewMeasurementSeriesView" text="Neu" />
+                  <Button mnemonicParsing="false" onAction="#deleteMeasurementSeries" text="Löschen" />
+                  <Button mnemonicParsing="false" onAction="#startMeasurement" text="Starten" />
+                  <Button mnemonicParsing="false" onAction="#stopMeasurement" text="Stoppen" />
               </buttons>
             </ButtonBar>
          </children>

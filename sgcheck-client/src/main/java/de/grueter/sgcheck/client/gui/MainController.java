@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
+import com.ftdichip.ftd2xx.FTD2xxException;
+
+import de.grueter.sgcheck.client.emu.EmuCheckMessreihe;
 import de.grueter.sgcheck.client.model.MeasurementSeriesModel;
+import de.grueter.sgcheck.dto.MeasurementPointDTO;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +31,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainController implements Initializable {
+	EmuCheckMessreihe eccm;
+
 	@FXML
 	private TextField messreiheIdEdit;
 	@FXML
@@ -108,6 +114,17 @@ public class MainController implements Initializable {
 		}
 	}
 
+	@FXML
+	private void deleteMeasurementSeries() {
+		if (!measurementSeriesTable.getSelectionModel().isEmpty()) {
+			MeasurementSeriesModel.getInstance()
+					.removeMeasurementSeries(measurementSeriesTable.getSelectionModel().getSelectedItem().getId());
+
+			// update view
+			MeasurementSeriesModel.getInstance().updateMeasurementSeriesList();
+		}
+	}
+
 	private Collection<XYChart.Series<String, Number>> createSeriesCollectionOfSelection() {
 		Collection<XYChart.Series<String, Number>> chartSeriesCollection = new ArrayList<Series<String, Number>>();
 
@@ -125,12 +142,6 @@ public class MainController implements Initializable {
 	}
 
 	@FXML
-	void updateMessreiheList() {
-		MeasurementSeriesModel.getInstance().updateMeasurementSeriesList();
-		// System.out.println(basisModel.holeMessreihe(1));
-	}
-
-	@FXML
 	void showNewMeasurementSeriesView() {
 		try {
 			GridPane rootPane = FXMLLoader.load(getClass().getResource("NewMeasurementSeriesView.fxml"));
@@ -145,5 +156,29 @@ public class MainController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@FXML
+	public void startMeasurement() {
+		try {
+			System.out.println("create emucheck");
+			MeasurementSeries series = measurementSeriesTable.getSelectionModel().getSelectedItem();
+			eccm = new EmuCheckMessreihe(this, series.getId(), series.getInterval());
+			System.out.println("start emucheck");
+			eccm.start();
+		} catch (FTD2xxException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	void stopMeasurement() {
+		if (eccm != null) {
+			eccm.interrupt();
+		}
+	}
+
+	public void saveMeasurement(int measurementSeriesId, MeasurementPointDTO measurementPoint) {
+		MeasurementSeriesModel.getInstance().saveMeasurementPoint(measurementSeriesId, measurementPoint);
 	}
 }
