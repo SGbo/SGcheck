@@ -34,11 +34,11 @@ public final class DBActions {
 		Class.forName("com.mysql.jdbc.Driver");
 
 		// connection =
-		// DriverManager.getConnection("jdbc:mysql://localhost:3306/Grueter",
-		// "phpmyadmin", "some_password");
+		 DriverManager.getConnection("jdbc:mysql://localhost:3306/Grueter",
+		 "phpmyadmin", "some_password");
 
 		// connect to lab
-		connection = DriverManager.getConnection("jdbc:mysql://stud-server2008:3306/grueter", "Grueter", "123456789");
+//		connection = DriverManager.getConnection("jdbc:mysql://stud-server2008:3306/grueter", "Grueter", "123456789");
 	}
 
 	public List<MeasurementSeriesDTO> getMeasurementSeriesList() throws ClassNotFoundException, SQLException {
@@ -99,10 +99,10 @@ public final class DBActions {
 		String sql = "INSERT INTO " + "`messreihe` (`id`, `verbraucher`, `messgroesse_id`, `interval`) VALUES (NULL, '"
 				+ series.getConsumer() + "','" + series.getId() + "','" + series.getInterval() + "'); ";
 
-		statement.executeUpdate(sql);
-				ResultSet resultSet = statement.executeQuery(sql);
+		statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+		ResultSet resultSet = statement.getGeneratedKeys();
 		
-		return resultSet.getInt(0);
+		return resultSet.getInt("id");
 	}
 
 	public void removeMeasurementSeries(int messreihe_id) throws ClassNotFoundException, SQLException {
