@@ -179,6 +179,10 @@ public class MainController implements Initializable {
 	}
 
 	public void saveMeasurement(int measurementSeriesId, MeasurementPointDTO measurementPoint) {
-		MeasurementSeriesModel.getInstance().saveMeasurementPoint(measurementSeriesId, measurementPoint);
+		try {
+			MeasurementSeriesModel.getInstance().saveMeasurementPoint(measurementSeriesId, measurementPoint);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

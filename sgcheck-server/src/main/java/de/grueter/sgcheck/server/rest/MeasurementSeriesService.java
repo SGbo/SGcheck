@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import de.grueter.sgcheck.dto.MeasurementPointDTO;
 import de.grueter.sgcheck.dto.MeasurementSeriesDTO;
@@ -59,16 +60,18 @@ public class MeasurementSeriesService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public MeasurementSeriesDTO addMeasurementSeries(MeasurementSeriesDTO series) {
-		System.out.println("ADD MEASUREMENT SERIES");
-		System.out.println(series.getConsumer());
+
 		try {
-			int id = DBActions.getInstance().addMeasurementSeries(series);
-			
-			return DBActions.getInstance().getMeasurementSeries(id);
+			if (series.getInterval() > 0) {
+				int id = DBActions.getInstance().addMeasurementSeries(series);
+				return DBActions.getInstance().getMeasurementSeries(id);
+			} else {
+				return null;
+			}
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -90,7 +93,7 @@ public class MeasurementSeriesService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void addMeasurementPoint(@PathParam("measurementSeriesId") int measurementSeriesId,
 			MeasurementPointDTO point) {
-		System.out.println(point.getId() + " " + point.getTimestemp() + " " + point.getValue());
+		
 		try {
 			DBActions.getInstance().addMeasurementPoint(measurementSeriesId, point);
 		} catch (ClassNotFoundException | SQLException e) {

@@ -1,5 +1,6 @@
 package de.grueter.sgcheck.client.model;
 
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +30,7 @@ public final class MeasurementSeriesModel {
 	private static MeasurementSeriesModel instance;
 	private final String BASE_URI = "http://localhost:8080/sgcheck/measurementseries";
 	private final ObservableList<MeasurementSeries> measurementSeriesList = FXCollections.observableArrayList();
+	private Date lastTimeStemp;
 
 	// create instance (singleton)
 	public static MeasurementSeriesModel getInstance() {
@@ -100,7 +102,7 @@ public final class MeasurementSeriesModel {
 
 		return series;
 	}
-	
+
 	public int createMeasurementSeries(String consumer, Measurand measurand, int interval) throws Exception {
 		Logger logger = Logger.getLogger(getClass().getName());
 
@@ -117,15 +119,13 @@ public final class MeasurementSeriesModel {
 		WebTarget webTarget = client.target(BASE_URI);
 
 		Response response = webTarget.request(MediaType.APPLICATION_JSON).post(Entity.json(seriesDTO));
-		
-		MeasurementSeriesDTO responseDTO = response.readEntity(new GenericType<MeasurementSeriesDTO>() {});
-		if (responseDTO != null) {
-			return responseDTO.getId();
-		}
-		
-		return -1;
+
+		MeasurementSeriesDTO responseDTO = response.readEntity(new GenericType<MeasurementSeriesDTO>() {
+		});
+
+		return responseDTO.getId();
 	}
-	
+
 	public void removeMeasurementSeries(int id) {
 		Logger logger = Logger.getLogger(getClass().getName());
 
@@ -133,14 +133,22 @@ public final class MeasurementSeriesModel {
 
 		Client client = ClientBuilder.newClient();
 		client.register(feature);
-		
+
 		WebTarget webTarget = client.target(BASE_URI + "/" + id);
 		webTarget.request().delete();
 	}
 
-	public void saveMeasurementPoint(int measurementSeriesId, MeasurementPointDTO measurementPoint) {
+	public void saveMeasurementPoint(int measurementSeriesId, MeasurementPointDTO measurementPoint) throws Exception {
 		Logger logger = Logger.getLogger(getClass().getName());
 
+		if (lastTimeStemp == null) {
+			lastTimeStemp = measurementPoint.getTimestemp();
+		} else {
+			if ((measurementPoint.getTimestemp().getTime() - lastTimeStemp.getTime()) < 1000) {
+				throw new Exception("invalid time!!");
+			}
+		}
+		
 		Feature feature = new LoggingFeature(logger, Level.INFO, null, null);
 
 		Client client = ClientBuilder.newClient();
