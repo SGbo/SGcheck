@@ -1,4 +1,4 @@
-package de.grueter.sgcheck.test;
+package de.grueter.sgcheck.testNG;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;

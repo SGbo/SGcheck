@@ -102,8 +102,15 @@ public final class MeasurementSeriesModel {
 
 		return series;
 	}
-
+	
 	public int createMeasurementSeries(String consumer, Measurand measurand, int interval) throws Exception {
+		return createMeasurementSeries(consumer, measurand, interval, 0);
+	}
+
+	/*
+	 * Useless function... only implemented for JBehave-test
+	 */
+	public int createMeasurementSeries(String consumer, Measurand measurand, int interval, int id) throws Exception {
 		Logger logger = Logger.getLogger(getClass().getName());
 
 		Feature feature = new LoggingFeature(logger, Level.INFO, null, null);
@@ -112,6 +119,7 @@ public final class MeasurementSeriesModel {
 		client.register(feature);
 
 		MeasurementSeriesDTO seriesDTO = new MeasurementSeriesDTO();
+		seriesDTO.setId(id);
 		seriesDTO.setConsumer(consumer);
 		seriesDTO.setInterval(interval);
 		seriesDTO.setMeasurand(new MeasurandDTO(measurand.getId(), measurand.getName(), measurand.getUnit()));
