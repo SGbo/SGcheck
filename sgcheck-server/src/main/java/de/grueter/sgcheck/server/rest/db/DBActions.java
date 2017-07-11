@@ -97,7 +97,7 @@ public final class DBActions {
 		connectSql();
 
 		Statement statement = connection.createStatement();
-		String sql = "INSERT INTO " + "`messreihe` (`id`, `verbraucher`, `messgroesse_id`, `interval`) VALUES (NULL, '"
+		String sql = "INSERT INTO " + "`messreihe` (`id`, `verbraucher`, `messgroesse_id`, `interval`) VALUES ('" + series.getId() +  "', '"
 				+ series.getConsumer() + "','" + series.getId() + "','" + series.getInterval() + "'); ";
 
 		statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);

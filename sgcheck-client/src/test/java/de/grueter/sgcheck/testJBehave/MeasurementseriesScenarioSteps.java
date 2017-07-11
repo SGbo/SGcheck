@@ -12,71 +12,73 @@ import de.grueter.sgcheck.client.gui.Measurand;
 import de.grueter.sgcheck.client.model.MeasurementSeriesModel;
 
 public class MeasurementseriesScenarioSteps {
-    private MeasurementSeriesModel model = MeasurementSeriesModel.getInstance();
-    private int measurementSeriesId;
-    private boolean exceptionCaught = false;
+	private MeasurementSeriesModel model = MeasurementSeriesModel.getInstance();
+	private int measurementSeriesId;
+	private boolean exceptionCaught = false;
 
-    @Given("eine oder mehrere Messreihen befinden sich in der Liste")
-    public void givenEineOderMehrereMessreihenBefindenSichInDerListe() {
-        model.updateMeasurementSeriesList();
-    }
+	@Given("eine oder mehrere Messreihen befinden sich in der Liste")
+	public void givenEineOderMehrereMessreihenBefindenSichInDerListe() {
+		model.updateMeasurementSeriesList();
+	}
 
-    @When("eine neue Messreihe wird angelegt")
-    public void whenEineNeueMessreiheWirdAngelegt() {
-        try {
-            measurementSeriesId = model.createMeasurementSeries("Lollipop", new Measurand(1, "Spannung", "V"), 1);
-            model.updateMeasurementSeriesList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	@When("eine neue Messreihe wird angelegt")
+	public void whenEineNeueMessreiheWirdAngelegt() {
+		try {
+			measurementSeriesId = 333;
+			model.createMeasurementSeries("Lollipop", new Measurand(1, "Spannung", "V"), 1, measurementSeriesId);
+			model.updateMeasurementSeriesList();
+		} catch (Exception e) {
+//			e.printStackTrace();
+		}
+	}
 
-    @Then("sollte die Anzahl der Listeneintraege groesser 1 sein")
-    public void thenSollteDieAnzahlDerListeneintraegeGroesser1Sein() {
-        assertTrue(!model.getMeasurementSeriesList().isEmpty());
-    }
+	@Then("sollte die Anzahl der Listeneintraege groesser 1 sein")
+	public void thenSollteDieAnzahlDerListeneintraegeGroesser1Sein() {
+		assertTrue(!model.getMeasurementSeriesList().isEmpty());
+	}
 
-    @Then("sollte die Messreihe mit der ID existieren")
-    public void thenSollteDieMessreiheMitDerIDExistieren() {
-        model.getMeasurementSeriesList().forEach(series -> {
-            if (series.getId() == measurementSeriesId) {
-                assertTrue(true);
-                return;
-            }
-        });
+	@Then("sollte die Messreihe mit der ID existieren")
+	public void thenSollteDieMessreiheMitDerIDExistieren() {
+		model.getMeasurementSeriesList().forEach(series -> {
+			if (series.getId() == measurementSeriesId) {
+				assertTrue(true);
+				return;
+			}
+		});
 
-        assertTrue(false);
-    }
+		assertTrue(false);
+	}
 
-    @Given("eine Messreihe mit der ID $id befindet sich in der Liste")
-    public void step21(int id) {
-        try {
-            measurementSeriesId = model.createMeasurementSeries("Best Toaster EU", new Measurand(1, "Spannung", "V"), 1,
-                    id);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+	@Given("eine Messreihe mit der ID $id befindet sich in der Liste")
+	public void step21(int id) {
+		try {
+			measurementSeriesId = id;
+			model.createMeasurementSeries("Best Toaster EU", new Measurand(1, "Spannung", "V"), 1, id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+//			e.printStackTrace();
+		}
+	}
 
-    @When("eine Messreihe mt der gleichen ID $id angelegt wird")
-    public void step22(int id) {
-        try {
-            model.createMeasurementSeries("Best Toaster EU", new Measurand(1, "Spannung", "V"), 1, id);
-        } catch (Exception e) {
-            exceptionCaught = true;
-            e.printStackTrace();
-        }
-    }
+	@When("eine Messreihe mt der gleichen ID $id angelegt wird")
+	public void step22(int id) {
+		try {
+			measurementSeriesId = id;
+			model.createMeasurementSeries("Best Toaster EU", new Measurand(1, "Spannung", "V"), 1);
+		} catch (Exception e) {
+			exceptionCaught = true;
+//			e.printStackTrace();
+		}
+	}
 
-    @Then("soll eine Fehlermeldung ausgegeben werden")
-    public void step23() {
-        assertTrue(exceptionCaught);
-    }
+	@Then("soll eine Fehlermeldung ausgegeben werden")
+	public void step23() {
+		assertTrue(exceptionCaught);
+	}
 
-    @AfterScenario
-    public void cleanup() {
-        System.out.println(measurementSeriesId);
-        MeasurementSeriesModel.getInstance().removeMeasurementSeries(measurementSeriesId);
-    }
+	@AfterScenario
+	public void cleanup() {
+		System.out.println(measurementSeriesId);
+		MeasurementSeriesModel.getInstance().removeMeasurementSeries(measurementSeriesId);
+	}
 }

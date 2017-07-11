@@ -67,8 +67,6 @@ public class MeasurementSeriesService {
                     int id = DBActions.getInstance().addMeasurementSeries(series);
                     return DBActions.getInstance().getMeasurementSeries(id);
                 }
-            } else {
-                return null;
             }
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();

@@ -102,15 +102,19 @@ public final class MeasurementSeriesModel {
 
 		return series;
 	}
-	
-	public int createMeasurementSeries(String consumer, Measurand measurand, int interval) throws Exception {
-		return createMeasurementSeries(consumer, measurand, interval, 0);
+
+	public void createMeasurementSeries(String consumer, Measurand measurand, int interval) throws Exception {
+		createMeasurementSeries(consumer, measurand, interval, 0);
 	}
 
 	/*
 	 * Useless function... only implemented for JBehave-test
 	 */
-	public int createMeasurementSeries(String consumer, Measurand measurand, int interval, int id) throws Exception {
+	public void createMeasurementSeries(String consumer, Measurand measurand, int interval, int id) throws Exception {
+		if ((interval) <= 0 || (interval > 3600)) {
+			System.out.println("Zeitinterval (" + interval + ") muss größer als 0 und kleiner als 3600 sein!");
+			throw new Exception("error");
+		}
 		Logger logger = Logger.getLogger(getClass().getName());
 
 		Feature feature = new LoggingFeature(logger, Level.INFO, null, null);
@@ -131,7 +135,11 @@ public final class MeasurementSeriesModel {
 		MeasurementSeriesDTO responseDTO = response.readEntity(new GenericType<MeasurementSeriesDTO>() {
 		});
 
-		return responseDTO.getId();
+		// if (responseDTO == null) {
+		// throw new NullPointerException("Could not create
+		// measurementseries!!");
+		// } else {
+		// }
 	}
 
 	public void removeMeasurementSeries(int id) {
@@ -156,7 +164,7 @@ public final class MeasurementSeriesModel {
 				throw new Exception("invalid time!!");
 			}
 		}
-		
+
 		Feature feature = new LoggingFeature(logger, Level.INFO, null, null);
 
 		Client client = ClientBuilder.newClient();
